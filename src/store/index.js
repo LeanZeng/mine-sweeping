@@ -14,6 +14,11 @@ export default new Vuex.Store({
       gameSize: 0,
       excavated: [],
       marked: []
+    },
+    clock: {
+      show: false,
+      seconds: 0,
+      timeRate: 0
     }
   },
   mutations: {
@@ -46,6 +51,15 @@ export default new Vuex.Store({
       } else {
         state.game.marked.push(payload.index)
       }
+    },
+    updateShowClock (state, payload) {
+      state.clock.show = payload.show
+    },
+    updateTimeRate (state, payload) {
+      state.clock.timeRate = payload.timeRate
+    },
+    resetClock (state) {
+      state.clock.seconds = state.clock.timeRate
     }
   },
   getters: {
