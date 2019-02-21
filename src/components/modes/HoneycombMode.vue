@@ -15,6 +15,11 @@ export default {
     return {
       message: 123
     }
+  },
+  created () {
+    this.$store.commit('updateMode', {
+      mode: 4
+    })
   }
 }
 </script>

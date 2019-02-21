@@ -1,8 +1,11 @@
 <template>
   <el-row class="header-content">
     <el-col :span="2" :offset="11" style="text-align: center;" v-if="$store.state.clock.show">
-      <span style="font-size: 30px; color: aliceblue">
-        {{ $store.state.clock.seconds }}
+      <span style="font-size: 30px; color: red" v-if="seconds <= 3 && mode === 2">
+        {{ seconds }}
+      </span>
+      <span style="font-size: 30px; color: aliceblue" v-else>
+        {{ seconds }}
       </span>
     </el-col>
   </el-row>
@@ -10,7 +13,15 @@
 
 <script>
 export default {
-  name: 'HeaderBar'
+  name: 'HeaderBar',
+  computed: {
+    seconds () {
+      return this.$store.state.clock.seconds
+    },
+    mode () {
+      return this.$store.state.game.mode
+    }
+  }
 }
 </script>
 

@@ -7,6 +7,17 @@ let gameCols
 let gameRows
 let gameSize
 
+function excavate (index) {
+  if (store.state.game.numbers[index] === 0) {
+    expandBlock(index)
+  } else {
+    store.commit('updateExcavatedByIndex', {
+      index: index,
+      excavated: true
+    })
+  }
+}
+
 function expandBlock (index) {
   numbers = store.state.game.numbers
   excavated = store.state.game.excavated
@@ -132,5 +143,5 @@ function initGame () {
 
 export {
   initGame,
-  expandBlock
+  excavate
 }

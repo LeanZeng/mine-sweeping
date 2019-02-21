@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import { excavate } from '../../assets/js/api.js'
 export default {
   name: 'SimpleBlock',
   data () {
@@ -18,14 +19,8 @@ export default {
     handleClick () {
       this.isMouseOver = false
       if (!this.marked && !this.excavated) {
-        if (this.number === 0) {
-          this.$emit('expand', this.index - 1)
-        } else {
-          this.$store.commit('updateExcavatedByIndex', {
-            index: this.index - 1,
-            excavated: true
-          })
-        }
+        this.$store.commit('resetClock')
+        excavate(this.index - 1)
       }
     },
     handleRight () {

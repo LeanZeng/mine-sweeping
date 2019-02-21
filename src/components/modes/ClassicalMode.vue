@@ -8,6 +8,9 @@ export default {
   name: 'ClassicalMode',
   components: {ClassicalModePanel},
   created () {
+    this.$store.commit('updateMode', {
+      mode: 1
+    })
     this.$store.commit('updateShowClock', {
       show: false
     })

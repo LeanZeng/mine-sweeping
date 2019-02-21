@@ -4,7 +4,12 @@
 
 <script>
 export default {
-  name: 'TwoPlayerMode'
+  name: 'TwoPlayerMode',
+  created () {
+    this.$store.commit('updateMode', { // 更新游戏模式
+      mode: 3
+    })
+  }
 }
 </script>
 
