@@ -1,25 +1,27 @@
 <template>
-  <div>
-    <input
-      v-model.number="message"
-    />
-    <label>复选框</label>
-    <p>{{ typeof message}}</p>
-  </div>
+  <el-row type="flex" justify="center">
+    <honeycomp-panel></honeycomp-panel>
+  </el-row>
 </template>
 
 <script>
+import HoneycompPanel from '../units/HoneycompPanel'
+import { initGame } from '../../assets/js/api.js'
 export default {
   name: 'HoneycombMode',
-  data () {
-    return {
-      message: 123
-    }
-  },
-  created () {
+  components: {HoneycompPanel},
+  created: function () {
     this.$store.commit('updateMode', {
-      mode: 4
+      mode: 3
     })
+    this.$store.commit('updateGameSize', {
+      gameRows: 10,
+      gameCols: 15
+    })
+    this.$store.commit('updateMineNumber', {
+      mineNumber: 20
+    })
+    initGame()
   }
 }
 </script>

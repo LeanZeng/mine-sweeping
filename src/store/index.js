@@ -14,7 +14,8 @@ export default new Vuex.Store({
       gameCols: 0, // 游戏列数
       gameSize: 0, // 游戏总格子数
       excavated: [], // 格子打开状态数组
-      marked: [] // 各组标记状态数组
+      marked: [], // 各组标记状态数组
+      updated: false
     },
     clock: {
       show: false, // 是否显示计时器
@@ -85,6 +86,9 @@ export default new Vuex.Store({
     updateMode (state, payload) {
       // 更新当前游戏模式
       state.game.mode = payload.mode
+    },
+    updateUpdated (state, payload) { // 更新数组更新状态
+      state.game.updated = payload.updated
     }
   },
   getters: {

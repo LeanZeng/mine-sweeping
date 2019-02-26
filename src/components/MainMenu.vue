@@ -55,9 +55,9 @@ export default {
           break
         case 2: this.$router.push({path: '/timedMode', query: {state: state}})
           break
-        case 3: this.$router.push('/twoPlayerMode')
+        case 3: this.$router.push('/honeycombMode')
           break
-        case 4: this.$router.push({path: '/honeycombMode', query: {state: state}})
+        case 4: this.$router.push({path: '/twoPlayerMode', query: {state: state}})
       }
     },
     handleStateDialogClose () {
