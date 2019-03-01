@@ -17,18 +17,22 @@ export default {
   methods: {
     handleClick (e) {
       // 左击事件
-      let index = this.getIndex(e.offsetX, e.offsetY)
-      if (this.$store.getters.getMarked(index) === false && this.$store.getters.getExcavated(index) === false) {
-        excavate(index)
+      if (!this.gameOver) {
+        let index = this.getIndex(e.offsetX, e.offsetY)
+        if (this.$store.getters.getMarked(index) === false && this.$store.getters.getExcavated(index) === false) {
+          excavate(index)
+        }
       }
     },
     handleRight (e) {
       // 右击事件
-      let index = this.getIndex(e.offsetX, e.offsetY)
-      this.$store.commit('updateMarkedByIndex', {
-        index: index
-      })
-      this.repaint()
+      if (!this.gameOver) {
+        let index = this.getIndex(e.offsetX, e.offsetY)
+        this.$store.commit('updateMarkedByIndex', {
+          index: index
+        })
+        this.repaint()
+      }
     },
     getIndex (x, y) { // 获取单元的序号，x, y 为鼠标点击的位置
       x = x - 5
@@ -173,6 +177,9 @@ export default {
     },
     updated () {
       return this.$store.state.game.updated
+    },
+    gameOver () {
+      return this.$store.state.game.gameOver
     }
   },
   mounted: function () {

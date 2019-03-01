@@ -15,13 +15,16 @@ export default new Vuex.Store({
       gameSize: 0, // 游戏总格子数
       excavated: [], // 格子打开状态数组
       marked: [], // 各组标记状态数组
-      updated: false
+      updated: false, // 游戏数组是否已经更新
+      gameOver: false, // 游戏是否已经结束
+      excavatedCount: 0 // 打开的格子数
     },
     clock: {
       show: false, // 是否显示计时器
       seconds: 0, // 计时器剩余秒数
       timeRate: 0 // 计时器总秒数
-    }
+    },
+    loading: false
   },
   mutations: {
     updateNumbers (state, payload) {
@@ -64,7 +67,9 @@ export default new Vuex.Store({
         state.game.marked.splice(state.game.marked.indexOf(payload.index), 1)
       } else {
         // 格子未被标记
-        state.game.marked.push(payload.index)
+        if (state.game.mineNumber - state.game.marked.length > 0) {
+          state.game.marked.push(payload.index)
+        }
       }
     },
     updateShowClock (state, payload) {
@@ -83,12 +88,28 @@ export default new Vuex.Store({
       // 计时器减少1秒
       state.clock.seconds -= 1
     },
+    increaseSenconds (state) {
+      // 计时器增加1秒
+      state.clock.seconds += 1
+    },
     updateMode (state, payload) {
       // 更新当前游戏模式
       state.game.mode = payload.mode
     },
     updateUpdated (state, payload) { // 更新数组更新状态
       state.game.updated = payload.updated
+    },
+    updateGameOver (state, payload) { // 更新游戏结束状态
+      state.game.gameOver = payload.gameOver
+    },
+    increaseExcavatedCount (state) { // 格子打开数量增加1
+      state.game.excavatedCount += 1
+    },
+    resetExcavatedCount (state) { // 重置格子打开数量
+      state.game.excavatedCount = 0
+    },
+    setLoading (state, payload) {
+      state.loading = payload.loading
     }
   },
   getters: {
@@ -99,6 +120,12 @@ export default new Vuex.Store({
     getExcavated: (state) => (index) => {
       // 根据格子下标获取打开状态
       return state.game.excavated[index]
+    },
+    getMinesRemaining: (state) => {
+      return (state.game.mineNumber - state.game.marked.length)
+    },
+    isCompleted: (state) => {
+      return (state.game.gameSize - state.game.mineNumber) === state.game.excavatedCount
     }
   }
 })

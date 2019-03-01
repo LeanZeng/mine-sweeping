@@ -19,7 +19,7 @@ export default {
         if (this.$store.state.clock.seconds === 0) {
           while (1) {
             let index = Math.floor(Math.random() * this.$store.state.game.gameSize)
-            if (this.$store.state.game.excavated[index] === false) {
+            if (this.$store.state.game.excavated[index] === false && this.$store.getters.getMarked(index + 1) === false) {
               excavate(index)
               break
             }
@@ -32,6 +32,9 @@ export default {
     }
   },
   created () {
+    this.$store.commit('updateGameOver', { // 游戏未结束
+      gameOver: false
+    })
     this.$store.commit('updateMode', {
       mode: 2
     })
@@ -41,6 +44,7 @@ export default {
     this.$store.commit('updateTimeRate', {
       timeRate: 10
     })
+    this.$store.commit('resetExcavatedCount')
   },
   mounted () {
     this.$store.commit('resetClock')

@@ -1,19 +1,81 @@
 <template>
-  <classical-mode-panel></classical-mode-panel>
+  <el-row>
+    <classical-mode-panel></classical-mode-panel>
+    <FinishedDialog :show.sync="showFinishedDialog"></FinishedDialog>
+  </el-row>
 </template>
 
 <script>
 import ClassicalModePanel from '../units/ClassicalModePanel'
+import FinishedDialog from '../units/FinishedDialog'
 export default {
   name: 'ClassicalMode',
-  components: {ClassicalModePanel},
+  components: {FinishedDialog, ClassicalModePanel},
+  data () {
+    return {
+      timer: null,
+      showFinishedDialog: false
+    }
+  },
+  methods: {
+    setTimer () {
+      this.timer = setInterval(() => {
+        if (this.gameOver === false && this.$store.getters.isCompleted === false) {
+          this.$store.commit('increaseSenconds') // 秒数自增
+        }
+      }, 1000)
+    }
+  },
+  computed: {
+    gameOver () {
+      return this.$store.state.game.gameOver
+    },
+    isCompleted () {
+      return this.$store.getters.isCompleted
+    }
+  },
+  watch: {
+    gameOver: function (val) {
+      if (val === true) {
+        if (this.isCompleted === true) {
+          this.showFinishedDialog = true
+          console.log('success!')
+        } else {
+          this.$alert('很遗憾，你没能完成游戏', '游戏失败', {
+            confirmButtonText: '确定'
+          })
+        }
+      }
+    },
+    isCompleted: function (val) {
+      if (val === true) {
+        this.$store.commit('updateGameOver', {
+          gameOver: true
+        })
+      }
+    }
+  },
   created () {
-    this.$store.commit('updateMode', {
+    this.$store.commit('updateMode', { // 游戏模式
       mode: 1
     })
-    this.$store.commit('updateShowClock', {
-      show: false
+    this.$store.commit('updateShowClock', { // 显示始终
+      show: true
     })
+    this.$store.commit('updateGameOver', { // 游戏未结束
+      gameOver: false
+    })
+    this.$store.commit('updateTimeRate', { // 时钟原始时间
+      timeRate: 0
+    })
+    this.$store.commit('resetExcavatedCount')
+  },
+  mounted: function () {
+    this.$store.commit('resetClock')
+    this.setTimer()
+  },
+  beforeDestroy: function () {
+    clearInterval(this.timer)
   }
 }
 </script>

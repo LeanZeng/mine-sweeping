@@ -47,7 +47,11 @@ export default {
   methods: {
     chooseState (mode) {
       this.state.selectedMode = mode
-      this.state.ifShowStateDialog = true
+      if (mode === 3) {
+        this.startGame()
+      } else {
+        this.state.ifShowStateDialog = true
+      }
     },
     startGame (state) {
       switch (this.state.selectedMode) {
@@ -66,8 +70,14 @@ export default {
     }
   },
   created () {
+    this.$store.commit('updateMode', {
+      mode: 0
+    })
     this.$store.commit('updateShowClock', {
       show: false
+    })
+    this.$store.commit('setLoading', {
+      loading: false
     })
   }
 }

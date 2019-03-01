@@ -11,6 +11,9 @@ export default {
   name: 'HoneycombMode',
   components: {HoneycompPanel},
   created: function () {
+    this.$store.commit('updateGameOver', { // 游戏未结束
+      gameOver: false
+    })
     this.$store.commit('updateMode', {
       mode: 3
     })
@@ -21,6 +24,7 @@ export default {
     this.$store.commit('updateMineNumber', {
       mineNumber: 20
     })
+    this.$store.commit('resetExcavatedCount')
     initGame()
   }
 }

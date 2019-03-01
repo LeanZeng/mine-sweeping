@@ -12,10 +12,23 @@ function excavate (index) {
   if (store.state.game.numbers[index] === 0) {
     expandBlock(index)
   } else {
-    store.commit('updateExcavatedByIndex', {
-      index: index,
-      excavated: true
-    })
+    if (store.state.game.numbers[index] === -1) {
+      for (let i in store.state.game.mines) {
+        store.commit('updateExcavatedByIndex', {
+          index: store.state.game.mines[i],
+          excavated: true
+        })
+      }
+      store.commit('updateGameOver', {
+        gameOver: true
+      })
+    } else {
+      store.commit('updateExcavatedByIndex', {
+        index: index,
+        excavated: true
+      })
+      store.commit('increaseExcavatedCount')
+    }
   }
   store.commit('updateUpdated', {
     updated: true
@@ -40,6 +53,7 @@ function doExpand (index) {
   if (mode === 3) { // 蜂巢模式面板
     if (store.getters.getMarked(index) === false && excavated[index] === false) {
       excavated[index] = true
+      store.commit('increaseExcavatedCount')
       if (numbers[index] === 0) {
         if (parseInt(index / gameRows) % 2 === 0) { // 奇数列
           if (index % gameRows !== 0) { // 不为第一行
@@ -77,6 +91,7 @@ function doExpand (index) {
   } else { // 经典模式面板
     if (marked.indexOf(index + 1) === -1 && excavated[index] === false) { // 当前格子为标记且未打开
       excavated[index] = true
+      store.commit('increaseExcavatedCount')
       if (numbers[index] === 0) {
         if ((index - gameCols - 1) >= 0 && (index) % gameCols !== 0) {
           doExpand(index - gameCols - 1)
@@ -245,6 +260,9 @@ function createNumbers () { // 生成每个方格到数字
 function initGame () {
   createMines()
   createNumbers()
+  store.commit('setLoading', {
+    loading: false
+  })
 }
 
 export {

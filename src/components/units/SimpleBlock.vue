@@ -17,19 +17,25 @@ export default {
   props: ['index'],
   methods: {
     handleClick () {
-      this.isMouseOver = false
-      if (!this.marked && !this.excavated) {
-        this.$store.commit('resetClock')
-        excavate(this.index - 1)
+      if (!this.gameOver) {
+        this.isMouseOver = false
+        if (!this.marked && !this.excavated) {
+          if (this.mode === 2) {
+            this.$store.commit('resetClock')
+          }
+          excavate(this.index - 1)
+        }
       }
     },
     handleRight () {
-      this.isMouseOver = false
-      if (!this.excavated) {
+      if (!this.excavated && !this.gameOver) {
         if (!this.marked) {
-          this.clearBlock()
-          this.drawBackground()
-          this.drawFlag()
+          if (this.$store.getters.getMinesRemaining > 0) {
+            this.isMouseOver = false
+            this.clearBlock()
+            this.drawBackground()
+            this.drawFlag()
+          }
         } else {
           this.clearBlock()
           this.drawBackground()
@@ -120,6 +126,12 @@ export default {
     },
     marked () {
       return this.$store.getters.getMarked(this.index)
+    },
+    mode () {
+      return this.$store.state.game.mode
+    },
+    gameOver () {
+      return this.$store.state.game.gameOver
     }
   },
   watch: {
