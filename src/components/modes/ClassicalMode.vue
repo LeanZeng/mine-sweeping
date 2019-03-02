@@ -1,6 +1,7 @@
 <template>
   <el-row>
-    <classical-mode-panel></classical-mode-panel>
+    <classical-mode-panel v-if="showBoard"></classical-mode-panel>
+    <div v-loading="true" v-else style="margin-top: 200px"></div>
     <FinishedDialog :show.sync="showFinishedDialog"></FinishedDialog>
   </el-row>
 </template>
@@ -24,6 +25,23 @@ export default {
           this.$store.commit('increaseSenconds') // 秒数自增
         }
       }, 1000)
+    },
+    startGame () {
+      this.$store.commit('updateMode', { // 游戏模式
+        mode: 1
+      })
+      this.$store.commit('updateShowClock', { // 显示时钟
+        show: true
+      })
+      this.$store.commit('updateGameOver', { // 游戏未结束
+        gameOver: false
+      })
+      this.$store.commit('updateTimeRate', { // 时钟原始时间
+        timeRate: 0
+      })
+      this.$store.commit('resetExcavatedCount')
+      this.$store.commit('resetClock')
+      this.setTimer()
     }
   },
   computed: {
@@ -32,6 +50,9 @@ export default {
     },
     isCompleted () {
       return this.$store.getters.isCompleted
+    },
+    showBoard () {
+      return this.$store.getters.getShowBoard
     }
   },
   watch: {
@@ -53,26 +74,16 @@ export default {
           gameOver: true
         })
       }
+    },
+    showBoard: function (val) {
+      if (val === true) {
+        clearInterval(this.timer)
+        this.startGame()
+      }
     }
   },
-  created () {
-    this.$store.commit('updateMode', { // 游戏模式
-      mode: 1
-    })
-    this.$store.commit('updateShowClock', { // 显示始终
-      show: true
-    })
-    this.$store.commit('updateGameOver', { // 游戏未结束
-      gameOver: false
-    })
-    this.$store.commit('updateTimeRate', { // 时钟原始时间
-      timeRate: 0
-    })
-    this.$store.commit('resetExcavatedCount')
-  },
   mounted: function () {
-    this.$store.commit('resetClock')
-    this.setTimer()
+    this.startGame()
   },
   beforeDestroy: function () {
     clearInterval(this.timer)

@@ -17,7 +17,8 @@ export default new Vuex.Store({
       marked: [], // 各组标记状态数组
       updated: false, // 游戏数组是否已经更新
       gameOver: false, // 游戏是否已经结束
-      excavatedCount: 0 // 打开的格子数
+      excavatedCount: 0, // 打开的格子数
+      showBoard: true // 是否显示雷区
     },
     clock: {
       show: false, // 是否显示计时器
@@ -110,6 +111,9 @@ export default new Vuex.Store({
     },
     setLoading (state, payload) {
       state.loading = payload.loading
+    },
+    setShowBoard (state, payload) {
+      state.game.showBoard = payload.showBoard
     }
   },
   getters: {
@@ -126,6 +130,9 @@ export default new Vuex.Store({
     },
     isCompleted: (state) => {
       return (state.game.gameSize - state.game.mineNumber) === state.game.excavatedCount
+    },
+    getShowBoard: (state) => {
+      return state.game.showBoard
     }
   }
 })

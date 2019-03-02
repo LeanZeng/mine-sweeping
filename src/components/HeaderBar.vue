@@ -40,10 +40,14 @@ export default {
       this.$router.go(-1)
     },
     refresh () {
-      this.$store.commit('setLoading', {
-        loading: true
+      this.$store.commit('setShowBoard', {
+        showBoard: false
       })
-      this.$router.go(0)
+      setTimeout(() => {
+        this.$store.commit('setShowBoard', {
+          showBoard: true
+        })
+      }, 500)
     },
     drawBoom () {
       let bomb = document.getElementById('bombs')
